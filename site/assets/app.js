@@ -114,8 +114,8 @@ topbar.querySelector('.menu-toggle').addEventListener('click', () => {
 });
 topbar.querySelectorAll('.nav a').forEach(a => a.addEventListener('click', () => topbar.classList.remove('open')));
 
-// 편집기 미리보기에서는 ?preview 로 열어서 캐시를 피한다
-fetch('content.json' + (location.search.includes('preview') ? '?t=' + Date.now() : ''))
+// GitHub Pages는 10분 캐시를 걸기 때문에, 올린 내용이 바로 보이도록 매번 서버에 변경 여부를 확인한다
+fetch('content.json', { cache: 'no-cache' })
   .then(r => r.json())
   .then(render)
   .then(() => { if (location.hash) document.querySelector(location.hash)?.scrollIntoView(); })

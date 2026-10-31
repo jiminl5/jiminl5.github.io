@@ -1,0 +1,211 @@
+{
+  "site": {
+    "title": "게임 기획자 이지민입니다",
+    "footer": "©2020 by Jimmy's Portfolio."
+  },
+  "hero": {
+    "image": "images/header.jpg",
+    "lines": [
+      "단순함이 최대의 효과를 만들어 낸다고 믿는 미니멀리스트.",
+      "상상력을 구현하는 것을 좋아하며,",
+      "모든 연령대와 교류하기를 원하는 디자이너."
+    ]
+  },
+  "portfolio": {
+    "heading": "포트폴리오",
+    "linkLabel": "포트폴리오 링크 (CLICK!)",
+    "linkUrl": "https://docs.google.com/presentation/d/1bpNkn1jenuXAu833QVoX4pyaElmhUCck2mPlQqVjDsk/edit#slide=id.p",
+    "projects": [
+      {
+        "title": "그랜드워배틀",
+        "image": "images/01_grand-war-battle.png",
+        "description": [
+          "캐쥬얼 밀리터리 전략 게임"
+        ]
+      },
+      {
+        "title": "IDLE LUCA",
+        "image": "images/02_idle-luca.jpg",
+        "description": [
+          "끝없는 스테이지에 도전하는 초.간.단. 전략 방치형 RPG!"
+        ]
+      },
+      {
+        "title": "각성 열렙전사 with Naver Webtoon",
+        "image": "images/03_awakened-yeollep-warrior.png",
+        "description": [
+          "기존 '열렙전사 with Naver Webtoon'을 수집형 RPG장르로 리부트하여 출시",
+          "Android, iOS 출시",
+          "UI/UX 기획",
+          "전투관련 (전투 방식, 캐릭터 능력치, 스킬 등) 시스템 기획",
+          "레이드 보스 AI 기획",
+          "스킬 컨셉 및 연출 기획",
+          "캐릭터 컨셉, 타이틀 화면, 인게임 아이콘 등 아트관련 작업 기획",
+          "아이템 및 장비 컨셉 및 밸런스 기획",
+          "전투 밸런스 및 데이터 작업",
+          "사운드 기획 및 편집 작업",
+          "게임 컨텐츠 기획"
+        ]
+      },
+      {
+        "title": "Lucid Adventure (Global)",
+        "image": "images/04_lucid-adventure-global.jpg",
+        "description": [
+          "Android, iOS Global 출시",
+          "각성 열렙전사 Global 버젼 관리 및 글로벌 팀 관리 및 영문 Localization 번역 작업"
+        ]
+      },
+      {
+        "title": "열렙전사 with Naver Webtoon",
+        "image": "images/05_yeollep-warrior.jpg",
+        "description": [
+          "수집형 오픈월드 MORPG",
+          "Android, iOS 출시",
+          "UI/UX 기획",
+          "전투관련 (전투 방식, 캐릭터 능력치, 스킬 등) 시스템 기획",
+          "레이드 보스 AI 기획",
+          "스킬 컨셉 및 연출 기획",
+          "캐릭터 컨셉, 타이틀 화면, 인게임 아이콘 등 아트관련 작업 기획",
+          "아이템 및 장비 컨셉 및 밸런스 기획",
+          "전투 밸런스 및 데이터 작업",
+          "사운드 기획 및 편집 작업",
+          "게임 컨텐츠 기획"
+        ]
+      },
+      {
+        "title": "Loser! Rock Paper Scissors",
+        "image": "images/06_loser-rps.png",
+        "description": [
+          "Free Arcade Mobile Game",
+          "Lose Rock Paper Scissors!",
+          "Break one of your common habits!",
+          "Test and Increase your concentration level."
+        ]
+      },
+      {
+        "title": "Project Cavern Tavern",
+        "image": "images/07_cavern-tavern.png",
+        "description": [
+          "Mobile time management / business simulation game.",
+          "2016 IEEE GameSIG Cup Winner & Intel's best game by a woman-led team"
+        ]
+      },
+      {
+        "title": "Individual Projects",
+        "image": "images/08_individual-projects.png",
+        "description": [
+          "Project Due Date Rush (top left) - mobile 2D infinite runner.",
+          "Multiplayer Bomberman (top right) - local area network arcade game",
+          "Network Pong (bottom left) - local area network arcade game",
+          "The Battle of Gettysburg (bottom right) - classic tower defense"
+        ]
+      }
+    ]
+  },
+  "about": {
+    "heading": "안녕하세요 기획자 이지민입니다",
+    "body": [
+      "게임 개발에 필요한 모든 분야에 관심이 있는 게임 디자이너입니다. 장르를 불문하고 게임 자체를 즐기는 유저이자",
+      "모든 연령대가 즐길 수 있는 게임을 개발하는 것이 목표인 개발자입니다.",
+      "UC Irvine에서 Computer Game Science를 전공하면서 'Blizzard' 본사의 멘토들과 함께 프로젝트를 진행하며 팀워크의 중요함을 경험하였습니다. 국내기업 '슈퍼플래닛'과 '노바코어'에서 게임 기획자로 일하게 되면서 국내뿐만 아니라 해외에도 프로젝트를 출시하는 값진 경험을 얻었습니다."
+    ]
+  },
+  "history": {
+    "heading": "이력 & 프로젝트",
+    "items": [
+      {
+        "company": "엑스텐 게임즈",
+        "period": "2022년 4월 - 2023년 11월",
+        "role": "메인 기획",
+        "project": "",
+        "details": [
+          "밀리터리 전략 RPG 프로젝트 전투 시스템, 전투 밸런싱 담당",
+          "밀리터리 전략 RPG 프로젝트 CPU 인공지능 구조 설계",
+          "밀리터리 전략 RPG 프로젝트 DB 테이블 구조 설계 및 데이터 관리",
+          "밀리터리 전략 RPG 프로젝트 컨텐츠 UI/UX 기획",
+          "밀리터리 전략 RPG 프로젝트 유닛 성장 및 스킬 시스템 기획"
+        ]
+      },
+      {
+        "company": "노바코어",
+        "period": "2020년 7월 - 2022년 2월",
+        "role": "IDLE LUCA팀 기획 팀장",
+        "project": "IDLE LUCA 프로젝트",
+        "details": [
+          "캐릭터/몬스터 스킬 연출 및 스킬 시스템 기획",
+          "전투 밸런싱 및 시스템 기획",
+          "콘텐츠 UI/UX 기획",
+          "DB 테이블 구조 설계 및 데이터 관리",
+          "Localization 관리",
+          "기획팀 업무 및 스케쥴 관리",
+          "해외 소프트 런칭 및 소프트 런칭 라이브 관리"
+        ]
+      },
+      {
+        "company": "슈퍼플래닛",
+        "period": "2017.11 - 2020.03",
+        "role": "시스템/콘텐츠/밸런스 기획",
+        "project": "열렙전사 (오리지널 & 리부트)",
+        "details": [
+          "UI/UX 기획",
+          "전투관련 (전투 방식, 캐릭터 능력치, 스킬 등) 시스템 기획",
+          "레이드 보스 AI 기획",
+          "스킬 컨셉 및 연출 기획",
+          "캐릭터 컨셉, 타이틀 화면, 인게임 아이콘 등 아트관련 작업 기획",
+          "아이템 및 장비 컨셉 및 밸런스 기획",
+          "전투 밸런스 및 데이터 작업",
+          "사운드 기획 및 편집 작업",
+          "게임 컨텐츠 기획",
+          "글로벌 팀 관리 및 영문 Localization 번역 작업"
+        ]
+      },
+      {
+        "company": "ThrowPad",
+        "period": "2017.04 - 2017.07",
+        "role": "2인 인디게임 개발",
+        "project": "Loser! Rock Paper Scissors",
+        "details": [
+          "2인 인디게임 팀에서 클라이언트 개발과 모든 기획 진행을 하여 지는 컨셉의 모바일 가위,바위,보 게임 개발"
+        ]
+      },
+      {
+        "company": "YingYingApps, LLC",
+        "period": "2016.09 - 2017.03",
+        "role": "클라이언트 개발 (계약)",
+        "project": "Command Napoleon (전쟁 보드 게임)",
+        "details": [
+          "인공지능 상대와 UI 프론트엔드 개발 작업"
+        ]
+      },
+      {
+        "company": "Project Cavern Tavern",
+        "period": "2015.09 - 2016.04",
+        "role": "클라이언트 개발",
+        "project": "2016 IEEE GameSIG Cup Winner & Intel's best game by a woman-led team",
+        "details": [
+          "타임매니지먼트 장르 게임 프로젝트에서 게임 플레이 개발 작업",
+          "2016 IEEE GameSIG 우승 및 인텔 선정 여성이 리드하는 최고의 프로젝트 상 수상"
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "heading": "연락처",
+    "email": "minjee2@gmail.com",
+    "phone": "010-2964-2248",
+    "links": [
+      {
+        "type": "facebook",
+        "url": "https://www.facebook.com/jimmy.lee.940436"
+      },
+      {
+        "type": "linkedin",
+        "url": "https://www.linkedin.com/in/jiminlee89"
+      },
+      {
+        "type": "github",
+        "url": "https://github.com/jiminl5"
+      }
+    ]
+  }
+}

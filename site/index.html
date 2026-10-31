@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>게임 기획자 이지민입니다</title>
+  <meta name="description" content="게임 기획자 이지민(Jimmy Lee)의 포트폴리오">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#main" data-bind="site.title"></a>
+      <button class="menu-toggle" aria-label="메뉴" aria-expanded="false">☰</button>
+      <nav class="nav">
+        <a href="#main">메인</a>
+        <a href="#portfolio">포트폴리오</a>
+        <a href="#about">소개</a>
+        <a href="#history">이력</a>
+        <a href="#contact">연락처</a>
+      </nav>
+      <a class="top-email" data-bind-email></a>
+      <div class="socials" data-socials></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="main" class="hero">
+      <div class="hero-text" data-hero-lines></div>
+    </section>
+
+    <section id="portfolio" class="section section-warm">
+      <h2 class="section-title" data-bind="portfolio.heading"></h2>
+      <p class="portfolio-link"><a target="_blank" rel="noopener" data-portfolio-link></a></p>
+      <div class="grid" data-projects></div>
+    </section>
+
+    <section id="about" class="section section-warm">
+      <h2 class="section-title" data-bind="about.heading"></h2>
+      <div class="about-body" data-about></div>
+    </section>
+
+    <section id="history" class="section section-blue">
+      <h2 class="section-title" data-bind="history.heading"></h2>
+      <div class="history" data-history></div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 class="section-title" data-bind="contact.heading"></h2>
+      <div class="contact" data-contact></div>
+    </section>
+  </main>
+
+  <footer class="footer" data-bind="site.footer"></footer>
+
+  <div class="lightbox" hidden>
+    <button class="lightbox-close" aria-label="닫기">×</button>
+    <div class="lightbox-body">
+      <img alt="">
+      <div class="lightbox-text">
+        <h3></h3>
+        <ul></ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

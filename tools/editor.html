@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>포트폴리오 편집기</title>
+  <style>
+    :root { --blue: #0066e3; --line: #e2e2e2; --bg: #f6f6f7; --text: #1d1d1f; --muted: #6e6e73; --danger: #d33; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.5 -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color: var(--text); background: var(--bg); height: 100vh; display: flex; flex-direction: column; }
+    header { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line); }
+    header h1 { font-size: 16px; margin: 0 auto 0 0; }
+    #status { color: var(--muted); font-size: 13px; margin-right: 8px; }
+    #status.dirty { color: #c77700; }
+    button { font: inherit; border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+    button:hover { border-color: #bbb; }
+    button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    button.small { padding: 2px 8px; font-size: 12px; }
+    button.danger { color: var(--danger); }
+    .wrap { flex: 1; display: flex; min-height: 0; }
+    #form { width: 460px; flex-shrink: 0; overflow-y: auto; padding: 16px; border-right: 1px solid var(--line); }
+    #preview { flex: 1; display: flex; flex-direction: column; background: #ddd; }
+    #preview .bar { display: flex; gap: 6px; padding: 6px 10px; background: #eee; border-bottom: 1px solid var(--line); align-items: center; font-size: 12px; color: var(--muted); }
+    #preview .bar span { margin-right: auto; }
+    iframe { flex: 1; border: 0; background: #fff; margin: 0 auto; width: 100%; transition: width .2s; }
+    details.section { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 12px; }
+    details.section > summary { padding: 10px 14px; font-weight: 600; cursor: pointer; }
+    details.section > .body { padding: 0 14px 14px; }
+    label { display: block; margin-top: 10px; font-size: 12px; color: var(--muted); }
+    input[type=text], input[type=url], textarea, select { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+    textarea { resize: vertical; min-height: 70px; }
+    .hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .item { border: 1px solid var(--line); border-radius: 6px; margin-top: 10px; background: #fafafa; }
+    .item > summary { padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .item > summary .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .item > .body { padding: 0 10px 10px; }
+    .add { margin-top: 10px; width: 100%; border-style: dashed; }
+    .img-field { display: flex; gap: 10px; align-items: flex-start; }
+    .img-field img { width: 90px; height: 90px; object-fit: cover; border-radius: 4px; background: #eee; flex-shrink: 0; }
+    .img-field .ctrl { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    dialog { border: 0; border-radius: 10px; width: min(720px, 90vw); padding: 20px; }
+    dialog pre { background: #f3f3f3; padding: 10px; max-height: 50vh; overflow: auto; font-size: 12px; white-space: pre-wrap; }
+    dialog::backdrop { background: rgba(0,0,0,.35); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>포트폴리오 편집기</h1>
+    <span id="status">불러오는 중…</span>
+    <button id="save" class="primary">저장 (⌘S)</button>
+    <button id="publish">사이트에 올리기</button>
+  </header>
+  <div class="wrap">
+    <div id="form"></div>
+    <div id="preview">
+      <div class="bar">
+        <span>미리보기 — 저장하면 새로고침돼요</span>
+        <button class="small" data-w="100%">PC</button>
+        <button class="small" data-w="768px">태블릿</button>
+        <button class="small" data-w="390px">휴대폰</button>
+        <button class="small" id="open">새 탭</button>
+      </div>
+      <iframe id="frame" src="/site/?preview"></iframe>
+    </div>
+  </div>
+
+  <dialog id="dlg">
+    <h3 id="dlg-title"></h3>
+    <div id="dlg-body"></div>
+    <p style="text-align:right;margin:16px 0 0"><button id="dlg-cancel">닫기</button> <button id="dlg-ok" class="primary">확인</button></p>
+  </dialog>
+
+<script>
+// 화면 구성. 필드를 추가하려면 여기만 고치면 된다.
+// type: text | url | lines(한 줄 = 한 항목) | image | select | list(반복 항목)
+const SCHEMA = [
+  { title: '기본 정보', fields: [
+    { path: 'site.title', label: '사이트 제목 (왼쪽 위 이름 / 브라우저 탭)' },
+    { path: 'site.footer', label: '맨 아래 문구' },
+  ]},
+  { title: '메인 (사진 + 문구)', fields: [
+    { path: 'hero.image', label: '배경 사진', type: 'image' },
+    { path: 'hero.lines', label: '문구', type: 'lines', hint: '한 줄에 한 문장' },
+  ]},
+  { title: '포트폴리오', fields: [
+    { path: 'portfolio.heading', label: '섹션 제목' },
+    { path: 'portfolio.linkLabel', label: '링크 문구' },
+    { path: 'portfolio.linkUrl', label: '링크 주소 (비우면 링크 숨김)', type: 'url' },
+    { path: 'portfolio.projects', label: '프로젝트', type: 'list', itemName: 'title', newItem: { title: '새 프로젝트', image: '', description: [] }, fields: [
+      { key: 'title', label: '제목' },
+      { key: 'image', label: '이미지', type: 'image' },
+      { key: 'description', label: '설명 (클릭해서 확대하면 보임)', type: 'lines', hint: '한 줄 = 한 항목' },
+    ]},
+  ]},
+  { title: '소개', fields: [
+    { path: 'about.heading', label: '섹션 제목' },
+    { path: 'about.body', label: '본문', type: 'lines', hint: '한 줄 = 한 문단' },
+  ]},
+  { title: '이력 & 프로젝트', fields: [
+    { path: 'history.heading', label: '섹션 제목' },
+    { path: 'history.items', label: '이력 (위에 있을수록 먼저 보임)', type: 'list', itemName: 'company', newItem: { company: '새 회사', period: '', role: '', project: '', details: [] }, fields: [
+      { key: 'company', label: '회사 / 팀' },
+      { key: 'period', label: '기간' },
+      { key: 'role', label: '역할' },
+      { key: 'project', label: '프로젝트 (선택)' },
+      { key: 'details', label: '세부 업무', type: 'lines', hint: '한 줄 = 한 항목' },
+    ]},
+  ]},
+  { title: '연락처', fields: [
+    { path: 'contact.heading', label: '섹션 제목' },
+    { path: 'contact.email', label: '이메일' },
+    { path: 'contact.phone', label: '전화번호 (비우면 숨김)' },
+    { path: 'contact.links', label: 'SNS 링크', type: 'list', itemName: 'type', newItem: { type: 'link', url: '' }, fields: [
+      { key: 'type', label: '종류', type: 'select', options: ['github', 'linkedin', 'facebook', 'link'] },
+      { key: 'url', label: '주소', type: 'url' },
+    ]},
+  ]},
+];
+
+let data = null;
+let images = [];
+let dirty = false;
+const $ = s => document.querySelector(s);
+const h = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== undefined && v !== false) e.setAttribute(k, v === true ? '' : v);
+  }
+  e.append(...kids.flat().filter(k => k != null));
+  return e;
+};
+const getPath = (o, p) => p.split('.').reduce((a, k) => a?.[k], o);
+const setPath = (o, p, v) => { const ks = p.split('.'); const last = ks.pop(); ks.reduce((a, k) => (a[k] ??= {}), o)[last] = v; };
+
+function markDirty() {
+  dirty = true;
+  $('#status').textContent = '저장 안 됨';
+  $('#status').className = 'dirty';
+}
+
+function field(spec, get, set) {
+  const type = spec.type || 'text';
+  const wrap = h('div', {}, h('label', {}, spec.label));
+  if (type === 'text' || type === 'url') {
+    wrap.append(h('input', { type: type === 'url' ? 'url' : 'text', value: get() ?? '', oninput: e => { set(e.target.value); markDirty(); } }));
+  } else if (type === 'lines') {
+    const v = get();
+    const ta = h('textarea', { rows: Math.min(12, Math.max(3, (v || []).length + 1)), oninput: e => { set(e.target.value.split('\n').map(s => s.trim()).filter(Boolean)); markDirty(); } });
+    ta.value = (Array.isArray(v) ? v : []).join('\n');
+    wrap.append(ta);
+  } else if (type === 'select') {
+    const sel = h('select', { onchange: e => { set(e.target.value); markDirty(); renderForm(); } }, spec.options.map(o => h('option', { value: o, selected: o === get() }, o)));
+    wrap.append(sel);
+  } else if (type === 'image') {
+    wrap.append(imageField(get, set));
+  }
+  if (spec.hint) wrap.append(h('div', { class: 'hint' }, spec.hint));
+  return wrap;
+}
+
+function imageField(get, set) {
+  const thumb = h('img', { src: get() ? '/site/' + get() : '', alt: '' });
+  const pick = h('select', { onchange: e => { set(e.target.value); thumb.src = '/site/' + e.target.value; markDirty(); } },
+    h('option', { value: '' }, '— 기존 이미지에서 고르기 —'),
+    images.map(p => h('option', { value: p, selected: p === get() }, p.replace('images/', ''))));
+  const file = h('input', { type: 'file', accept: 'image/*', hidden: true, onchange: async e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = await fetch('/api/upload', { method: 'POST', headers: { 'X-Filename': encodeURIComponent(f.name) }, body: f });
+    const j = await r.json();
+    if (!r.ok) return alert(j.error);
+    images.push(j.path);
+    set(j.path);
+    markDirty();
+    renderForm();
+  }});
+  return h('div', { class: 'img-field' }, thumb,
+    h('div', { class: 'ctrl' }, h('button', { type: 'button', onclick: () => file.click() }, '내 컴퓨터에서 새 이미지 올리기'), pick, file));
+}
+
+const openItems = new Set();
+function listField(spec, path) {
+  const arr = getPath(data, path) || [];
+  const wrap = h('div', {}, h('label', {}, spec.label));
+  arr.forEach((item, i) => {
+    const id = path + ':' + i;
+    const move = d => { const j = i + d; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; openItems.clear(); markDirty(); renderForm(); };
+    const det = h('details', { class: 'item', open: openItems.has(id), ontoggle: e => e.target.open ? openItems.add(id) : openItems.delete(id) },
+      h('summary', {},
+        h('span', { class: 'name' }, item[spec.itemName] || '(이름 없음)'),
+        h('button', { type: 'button', class: 'small', title: '위로', onclick: e => { e.preventDefault(); move(-1); } }, '↑'),
+        h('button', { type: 'button', class: 'small', title: '아래로', onclick: e => { e.preventDefault(); move(1); } }, '↓'),
+        h('button', { type: 'button', class: 'small danger', onclick: e => { e.preventDefault(); if (confirm(`'${item[spec.itemName] || '이 항목'}'을(를) 삭제할까요?`)) { arr.splice(i, 1); openItems.clear(); markDirty(); renderForm(); } } }, '삭제')),
+      h('div', { class: 'body' }, spec.fields.map(f => field(f, () => item[f.key], v => {
+        item[f.key] = v;
+        if (f.key === spec.itemName) det.querySelector('.name').textContent = v || '(이름 없음)';
+      }))));
+    wrap.append(det);
+  });
+  wrap.append(h('button', { type: 'button', class: 'add', onclick: () => {
+    arr.unshift(structuredClone(spec.newItem));
+    setPath(data, path, arr);
+    openItems.clear(); openItems.add(path + ':0');
+    markDirty(); renderForm();
+  }}, '+ 맨 위에 추가'));
+  return wrap;
+}
+
+const openSections = new Set([SCHEMA[0].title]);
+function renderForm() {
+  const scroll = $('#form').scrollTop;
+  $('#form').replaceChildren(...SCHEMA.map(sec => h('details', { class: 'section', open: openSections.has(sec.title), ontoggle: e => e.target.open ? openSections.add(sec.title) : openSections.delete(sec.title) },
+    h('summary', {}, sec.title),
+    h('div', { class: 'body' }, sec.fields.map(f => f.type === 'list' ? listField(f, f.path) : field(f, () => getPath(data, f.path), v => setPath(data, f.path, v)))))));
+  $('#form').scrollTop = scroll;
+}
+
+async function save() {
+  const r = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+  if (!r.ok) return alert('저장 실패: ' + (await r.json()).error);
+  dirty = false;
+  $('#status').textContent = '저장됨 ' + new Date().toLocaleTimeString();
+  $('#status').className = '';
+  $('#frame').contentWindow.location.reload();
+}
+
+function dialog(title, body, okLabel) {
+  $('#dlg-title').textContent = title;
+  $('#dlg-body').replaceChildren(body);
+  $('#dlg-ok').textContent = okLabel || '확인';
+  $('#dlg-ok').hidden = !okLabel;
+  $('#dlg').showModal();
+  return new Promise(res => {
+    $('#dlg-ok').onclick = () => { $('#dlg').close(); res(true); };
+    $('#dlg-cancel').onclick = () => { $('#dlg').close(); res(false); };
+  });
+}
+
+async function publish() {
+  if (dirty) await save();
+  const st = await (await fetch('/api/status')).json();
+  if (!st.git) return dialog('git 저장소가 아니에요', h('p', {}, 'README의 처음 설정을 먼저 해 주세요.'));
+  const msg = h('input', { type: 'text', placeholder: '무엇을 바꿨는지 (비워도 됨)' });
+  const ok = await dialog('사이트에 올리기', h('div', {},
+    h('p', {}, st.changes ? '바뀐 파일:' : '바뀐 파일이 없어요. 그래도 올리면 이전 커밋만 다시 push해요.'),
+    st.changes ? h('pre', {}, st.changes) : null,
+    h('label', {}, '변경 메모'), msg), '올리기');
+  if (!ok) return;
+  $('#status').textContent = '올리는 중…';
+  const r = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg.value }) });
+  const j = await r.json();
+  $('#status').textContent = j.ok ? '올림 완료 — 1~2분 뒤 사이트에 반영돼요' : '올리기 실패';
+  dialog(j.ok ? '올림 완료' : '올리기 실패', h('pre', {}, j.log || j.error));
+}
+
+$('#save').onclick = save;
+$('#publish').onclick = publish;
+$('#open').onclick = () => window.open('/site/?preview');
+document.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { $('#frame').style.width = b.dataset.w; });
+document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); save(); } });
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+(async () => {
+  [data, images] = await Promise.all([
+    fetch('/site/content.json').then(r => r.json()),
+    fetch('/api/images').then(r => r.json()).then(j => j.images),
+  ]);
+  renderForm();
+  $('#status').textContent = '불러옴';
+})();
+</script>
+</body>
+</html>

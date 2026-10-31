@@ -92,6 +92,7 @@ img { max-width: 100%; display: block; }
 /* ---------- 소개 ---------- */
 .about-body { max-width: 940px; margin: 0 auto; text-align: center; font-size: 17px; }
 .about-body p { margin: 0; }
+.about-body p.gap { height: 1em; }
 
 /* ---------- 이력 ---------- */
 .history { max-width: 940px; margin: 60px auto 0; }

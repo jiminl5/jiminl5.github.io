@@ -61,7 +61,8 @@ function render(c) {
   }));
 
   // 소개
-  document.querySelector('[data-about]').replaceChildren(...lines(c.about.body).map(t => el('p', null, t)));
+  // 빈 줄은 문단 간격
+  document.querySelector('[data-about]').replaceChildren(...(c.about.body || []).map(t => (t.trim() ? el('p', null, t) : el('p', 'gap'))));
 
   // 이력
   document.querySelector('[data-history]').replaceChildren(...c.history.items.map(h => {

@@ -146,7 +146,14 @@ function field(spec, get, set) {
     wrap.append(h('input', { type: type === 'url' ? 'url' : 'text', value: get() ?? '', oninput: e => { set(e.target.value); markDirty(); } }));
   } else if (type === 'lines') {
     const v = get();
-    const ta = h('textarea', { rows: Math.min(12, Math.max(3, (v || []).length + 1)), oninput: e => { set(e.target.value.split('\n').map(s => s.trim()).filter(Boolean)); markDirty(); } });
+    // 중간의 빈 줄은 문단 간격으로 남기고, 앞뒤 빈 줄만 지운다
+    const ta = h('textarea', { rows: Math.min(12, Math.max(3, (v || []).length + 1)), oninput: e => {
+      const ls = e.target.value.split('\n').map(s => s.trim());
+      while (ls.length && !ls[0]) ls.shift();
+      while (ls.length && !ls[ls.length - 1]) ls.pop();
+      set(ls);
+      markDirty();
+    } });
     ta.value = (Array.isArray(v) ? v : []).join('\n');
     wrap.append(ta);
   } else if (type === 'select') {
